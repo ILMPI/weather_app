@@ -1,6 +1,7 @@
 const { src, dest, watch, parallel, series } = require('gulp');
 
 const sass = require('gulp-dart-sass');
+
 (fileinclude = require('gulp-file-include')),
 	(del = require('del')),
 	(htmlmin = require('gulp-htmlmin')),
@@ -86,6 +87,25 @@ function imageSync() {
 		.pipe(browserSync.stream({ once: true }));
 }
 
+
+async function imageSyncMin() {
+	const imagemin = (await import('gulp-imagemin')).default;
+	const imageminPngquant = (await import('imagemin-pngquant')).default;
+	const imageminMozjpeg = (await import('imagemin-mozjpeg')).default;
+	const imageminSvgo = (await import('imagemin-svgo')).default;
+
+	return src('src/imgs/**/*', { encoding: false })
+		.pipe(
+			imagemin([
+				imageminPngquant({ quality: [0.6, 0.8], speed: 1 }),
+				imageminMozjpeg({ quality: 70, progressive: true }),
+				imageminSvgo(),
+			])
+		)
+		.pipe(dest('app/imgs'))
+		.pipe(browserSync.stream({ once: true }));
+}
+
 function browsersync() {
 	browserSync.init({
 		server: {
@@ -118,10 +138,10 @@ async function pretty() {
 
 exports.build = series(
 	clean, // clean the folder
-	htmlMin, // build HTML
+	htmlMin, // minified HTML
 	stylesMin, // minified styles
 	scripts, // minified scripts
-	imageSync, // copy images
+	imageSyncMin, // minified images
 );
 exports.format = pretty;
 exports.cssmin = stylesMin;
