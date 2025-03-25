@@ -1,7 +1,9 @@
-const { src, dest, watch, parallel } = require('gulp');
+const { src, dest, watch, parallel, series } = require('gulp');
 
 const sass = require('gulp-dart-sass');
 (fileinclude = require('gulp-file-include')),
+	(del = require('del')),
+	(htmlmin = require('gulp-htmlmin')),
 	(cfg = require('./package.json').config),
 	(csso = require('gulp-csso')),
 	(concat = require('gulp-concat')),
@@ -21,25 +23,34 @@ function html() {
 		.pipe(dest(cfg.outputDir))
 		.pipe(browserSync.stream({ once: true }));
 }
+function htmlMin() {
+	return src([cfg.srcDir + '/*.html'])
+		.pipe(
+			fileinclude({
+				prefix: '@@',
+				basepath: '@file',
+			}),
+		)
+		.pipe(htmlmin({ collapseWhitespace: true }))
+		.pipe(dest(cfg.outputDir));
+}
 
 function styles() {
-	return (
-		src(cfg.srcDir + 'scss/**/*.{scss,sass}', { sourcemaps: true })
-			.pipe(
-				sass({
-					outputStyle: 'expanded', // expanded/compressed
-					silenceDeprecations: ['legacy-js-api'], // Disable old API warnings
-				}).on('error', sass.logError),
-			)
-			.pipe(
-				autoprefixer({
-					overrideBrowserslist: browserslist,
-				}),
-			)
-	
-			.pipe(dest(cfg.outputDir + 'css', { sourcemaps: '.' }))
-			.pipe(browserSync.stream({ once: true }))
-	);
+	return src(cfg.srcDir + 'scss/**/*.{scss,sass}', { sourcemaps: true })
+		.pipe(
+			sass({
+				outputStyle: 'expanded', // expanded/compressed
+				silenceDeprecations: ['legacy-js-api'], // Disable old API warnings
+			}).on('error', sass.logError),
+		)
+		.pipe(
+			autoprefixer({
+				overrideBrowserslist: browserslist,
+			}),
+		)
+
+		.pipe(dest(cfg.outputDir + 'css', { sourcemaps: '.' }))
+		.pipe(browserSync.stream({ once: true }));
 }
 
 function stylesMin() {
@@ -90,6 +101,11 @@ function watching() {
 	watch([cfg.srcDir + 'imgs/**/*'], imageSync);
 }
 
+async function clean() {
+	const { deleteSync } = await import('del');
+	return deleteSync([cfg.outputDir]);
+}
+
 async function loadPrettier() {
 	const prettier = await import('gulp-prettier');
 	return prettier.default;
@@ -100,6 +116,13 @@ async function pretty() {
 	return src(['src/**/*', '!src/imgs/**/*']).pipe(prettier()).pipe(dest('src'));
 }
 
+exports.build = series(
+	clean, // clean the folder
+	htmlMin, // build HTML
+	stylesMin, // minified styles
+	scripts, // minified scripts
+	imageSync, // copy images
+);
 exports.format = pretty;
 exports.cssmin = stylesMin;
 exports.default = parallel(html, styles, scripts, imageSync, watching, browsersync);
