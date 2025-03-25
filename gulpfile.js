@@ -1,7 +1,8 @@
 const { src, dest, watch, parallel, series } = require('gulp');
 
 const sass = require('gulp-dart-sass');
-
+const plumber = require('gulp-plumber');
+const notify = require('gulp-notify');
 (fileinclude = require('gulp-file-include')),
 	(del = require('del')),
 	(htmlmin = require('gulp-htmlmin')),
@@ -38,6 +39,7 @@ function htmlMin() {
 
 function styles() {
 	return src(cfg.srcDir + 'scss/**/*.{scss,sass}', { sourcemaps: true })
+		.pipe(plumber({ errorHandler: notify.onError('Sass Error: <%= error.message %>') }))
 		.pipe(
 			sass({
 				outputStyle: 'expanded', // expanded/compressed
@@ -75,6 +77,7 @@ function stylesMin() {
 
 function scripts() {
 	return src(cfg.srcDir + 'js/**/*.js')
+		.pipe(plumber({ errorHandler: notify.onError('Error: <%= error.message %>') }))
 		.pipe(concat('script.min.js'))
 		.pipe(terser())
 		.pipe(dest(cfg.outputDir + 'js'))
@@ -86,7 +89,6 @@ function imageSync() {
 		.pipe(dest('app/imgs'))
 		.pipe(browserSync.stream({ once: true }));
 }
-
 
 async function imageSyncMin() {
 	const imagemin = (await import('gulp-imagemin')).default;
@@ -100,7 +102,7 @@ async function imageSyncMin() {
 				imageminPngquant({ quality: [0.6, 0.8], speed: 1 }),
 				imageminMozjpeg({ quality: 70, progressive: true }),
 				imageminSvgo(),
-			])
+			]),
 		)
 		.pipe(dest('app/imgs'))
 		.pipe(browserSync.stream({ once: true }));
