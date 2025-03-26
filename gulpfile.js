@@ -37,6 +37,24 @@ function htmlMin() {
 		.pipe(dest(cfg.outputDir));
 }
 
+// experimental
+// converts otf to ttf, woff, woff2
+// needs gulp-fonter
+// not stable
+
+// async function fontsOTF() {
+// 	const fonter = (await import('gulp-fonter')).default;
+// 	const ttf2woff2 = (await import('gulp-ttf2woff2')).default;
+
+// 	return src('src/fonts/**/*.{ttf,otf}', { encoding: false })
+// 		.pipe(plumber({ errorHandler: notify.onError('Font Error: <%= error.message %>') }))
+// 		.pipe(fonter({ formats: ['ttf', 'woff'] }))
+// 		.pipe(dest('app/fonts'))
+// 		.pipe(src('src/fonts/**/*.ttf'))
+// 		.pipe(ttf2woff2())
+// 		.pipe(dest('app/fonts'));
+// }
+
 async function fonts() {
 	const ttf2woff2 = (await import('gulp-ttf2woff2')).default;
 
