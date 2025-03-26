@@ -9,9 +9,12 @@ html {
 html,
 body {
 	height: 100%;
-	// font-family: $font_1;
-	font-weight: 400;
 	scroll-behavior: smooth;
+}
+
+body {
+	font-family: $font_1;
+	font-weight: 400;
 }
 
 .wrapper {
@@ -38,13 +41,11 @@ body {
 }
 
 /* remove */
-body {
-	font-family: cursive;
-}
+
 
 header,
 footer {
-	padding: 30px 0;
+	padding: 30px 6px;
 	display: flex;
 	align-items: center;
 	min-height: 120px;
@@ -72,6 +73,10 @@ footer {
 	// p {
 	// 	color: $color_black;
 	// }
+}
+
+h1 {
+	font-weight: normal;
 }
 
 /* remove */

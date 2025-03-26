@@ -10,6 +10,7 @@ A fast and simple Gulp 5+ starter template for frontend development.
 - HTML file includes
 - Autoprefixer (browserslist: `> 1%, last 3 versions, not dead`)
 - Image optimization (JPEG, PNG, SVG)
+- Convert fonts .ttf to woff2
 - LiveReload via BrowserSync
 - HTML/SCSS/JS prettifying (Prettier)
 - Production build with minified HTML/CSS/JS/images
@@ -25,6 +26,7 @@ A fast and simple Gulp 5+ starter template for frontend development.
 │   ├── scss/       # SCSS files
 │   ├── js/         # JS files
 │   ├── imgs/       # Images
+│   ├── fonts/      # Fonts
 │   └── *.html      # HTML files
 └── gulpfile.js     # Gulp config
 ```
@@ -52,7 +54,7 @@ This will:
 - Compile SCSS
 - Concatenate and minify JS
 - Watch for changes
-- Launch a local dev server at `localhost:3000`
+- Launch a local dev server
 
 4. **Format your source files**:
 
@@ -71,14 +73,7 @@ This creates a clean build in the `/app/` folder with:
 - Minified HTML
 - Minified CSS and JS
 - Optimized images
-
----
-
-## 🤓 Notes
-
-- Images are optimized **only in production build** (`gulp build`)
-- No image caching is used to ensure fresh compression each time
-- If you don't want to install packages globally — just run everything locally via npm scripts or `npx`
+- Converted fonts
 
 ---
 

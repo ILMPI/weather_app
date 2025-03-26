@@ -30,6 +30,7 @@
 		"gulp-plumber": "^1.2.1",
 		"gulp-prettier": "^6.0.0",
 		"gulp-terser": "^2.1.0",
+		"gulp-ttf2woff2": "^5.0.0",
 		"imagemin-mozjpeg": "^10.0.0",
 		"imagemin-pngquant": "^10.0.0",
 		"imagemin-svgo": "^11.0.1"

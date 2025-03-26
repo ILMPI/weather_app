@@ -37,6 +37,20 @@ function htmlMin() {
 		.pipe(dest(cfg.outputDir));
 }
 
+async function fonts() {
+	const ttf2woff2 = (await import('gulp-ttf2woff2')).default;
+
+	// Copy the original fonts
+	src('src/fonts/**/*', { encoding: false }).pipe(dest('app/fonts'));
+
+	// Convert only .ttf to .woff2
+	return src('src/fonts/**/*.ttf', { encoding: false })
+		.pipe(plumber({ errorHandler: notify.onError('Font Error: <%= error.message %>') }))
+		.pipe(ttf2woff2())
+		.pipe(dest('app/fonts'));
+}
+
+
 function styles() {
 	return src(cfg.srcDir + 'scss/**/*.{scss,sass}', { sourcemaps: true })
 		.pipe(plumber({ errorHandler: notify.onError('Sass Error: <%= error.message %>') }))
@@ -141,10 +155,11 @@ async function pretty() {
 exports.build = series(
 	clean, // clean the folder
 	htmlMin, // minified HTML
+	fonts, // convert fonts to woff2
 	stylesMin, // minified styles
 	scripts, // minified scripts
 	imageSyncMin, // minified images
 );
 exports.format = pretty;
 exports.cssmin = stylesMin;
-exports.default = parallel(html, styles, scripts, imageSync, watching, browsersync);
+exports.default = parallel(html, fonts, styles, scripts, imageSync, watching, browsersync);
