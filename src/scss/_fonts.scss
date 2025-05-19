@@ -4,7 +4,17 @@
 	src:
 		url('../fonts/Montserrat-VariableFont_wght.woff2') format('woff2'),
 		url('../fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
-	font-weight: 400;
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+	unicode-range: U+0000-00FF;
+}
+
+@font-face {
+	font-family: 'e-Ukraine';
+	src:
+		url('../fonts/e-Ukraine-Bold-Latin.woff2') format('woff2');
+	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 	unicode-range: U+0000-00FF;
@@ -17,6 +27,16 @@
 		url('../fonts/Montserrat-VariableFont_wght.woff2') format('woff2'),
 		url('../fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
 	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+	unicode-range: U+0400-04FF, U+1E00-1EFF;
+}
+
+@font-face {
+	font-family: 'e-Ukraine';
+	src:
+		url('../fonts/e-Ukraine-Bold-Cyrillic.woff2') format('woff2');
+	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 	unicode-range: U+0400-04FF, U+1E00-1EFF;
