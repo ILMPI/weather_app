@@ -1,19 +1,21 @@
 const { src, dest, watch, parallel, series } = require('gulp');
+require('dotenv').config();
+const replace = require('gulp-replace');
 
 const sass = require('gulp-dart-sass');
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 const { existsSync } = require('fs');
-(fileinclude = require('gulp-file-include')),
-	(del = require('del')),
-	(htmlmin = require('gulp-htmlmin')),
-	(cfg = require('./package.json').config),
-	(csso = require('gulp-csso')),
-	(concat = require('gulp-concat')),
-	(autoprefixer = require('gulp-autoprefixer')),
-	(browserSync = require('browser-sync').create()),
-	(terser = require('gulp-terser')),
-	(browserslist = ['> 1%, last 3 versions, not dead']);
+const fileinclude = require('gulp-file-include');
+const del = require('del');
+const htmlmin = require('gulp-htmlmin');
+const cfg = require('./package.json').config;
+const csso = require('gulp-csso');
+const concat = require('gulp-concat');
+const autoprefixer = require('gulp-autoprefixer');
+const browserSync = require('browser-sync').create();
+const terser = require('gulp-terser');
+const browserslist = ['> 1%, last 3 versions, not dead'];
 
 function html() {
 	return src([cfg.srcDir + '/*.html'])
@@ -55,6 +57,33 @@ function htmlMin() {
 // 		.pipe(ttf2woff2())
 // 		.pipe(dest('app/fonts'));
 // }
+
+function replaceEnvVars() {
+	let stream = scriptsRaw();
+	for (const key in process.env) {
+		if (Object.hasOwnProperty.call(process.env, key)) {
+			const value = process.env[key];
+			if (typeof value === 'string') {
+				stream = stream.pipe(replace(`process.env.${key}`, JSON.stringify(value)));
+			}
+		}
+	}
+	return stream;
+}
+
+function scriptsRaw() {
+	return src(cfg.srcDir + 'js/**/*.js').pipe(
+		plumber({ errorHandler: notify.onError('Error: <%= error.message %>') }),
+	);
+}
+
+function scripts() {
+	return replaceEnvVars()
+		.pipe(concat('script.min.js'))
+		.pipe(terser())
+		.pipe(dest(cfg.outputDir + 'js'))
+		.pipe(browserSync.stream({ once: true }));
+}
 
 async function fonts() {
 	const ttf2woff2 = (await import('gulp-ttf2woff2')).default;
@@ -113,14 +142,14 @@ function stylesMin() {
 	);
 }
 
-function scripts() {
-	return src(cfg.srcDir + 'js/**/*.js')
-		.pipe(plumber({ errorHandler: notify.onError('Error: <%= error.message %>') }))
-		.pipe(concat('script.min.js'))
-		.pipe(terser())
-		.pipe(dest(cfg.outputDir + 'js'))
-		.pipe(browserSync.stream({ once: true }));
-}
+// function scripts() {
+// 	return src(cfg.srcDir + 'js/**/*.js')
+// 		.pipe(plumber({ errorHandler: notify.onError('Error: <%= error.message %>') }))
+// 		.pipe(concat('script.min.js'))
+// 		.pipe(terser())
+// 		.pipe(dest(cfg.outputDir + 'js'))
+// 		.pipe(browserSync.stream({ once: true }));
+// }
 
 function imageSync() {
 	if (!existsSync('src/imgs')) {
@@ -132,7 +161,7 @@ function imageSync() {
 }
 
 async function imageSyncMin() {
-		if (!existsSync('src/imgs')) {
+	if (!existsSync('src/imgs')) {
 		return Promise.resolve();
 	}
 	const imagemin = (await import('gulp-imagemin')).default;

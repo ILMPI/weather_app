@@ -1,7 +1,15 @@
-node_modules/
-/node_modules
-app/
-/app
+.env
+
+# Build/output directories
+dist/
 build/
 /build/
+app/
+/app
+
+# Node dependencies
+node_modules/
+/node_modules
+
+#
 package-lock.json

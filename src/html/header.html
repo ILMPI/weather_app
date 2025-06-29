@@ -1,1 +1,20 @@
-<header class="header">header</header>
+<header class="header">
+	<div class="container">
+		<form class="header__form" id="weatherForm" autocomplete="off" role="search" aria-label="Weather search">
+			<label for="cityInput" class="header__label" id="cityInputLabel">&#127968;</label>
+			<input id="cityInput" class="header__input" type="text" name="city" placeholder="Enter city…" autocomplete="off" aria-labelledby="cityInputLabel" required />
+
+			<button id="searchBtn" class="header__button" type="submit">
+				<span class="header__button_text">Search</span>
+			</button>
+
+			<label for="langSelect" class="header__label" id="langLabel">&#127760;</label>
+			<select id="langSelect" class="header__select" name="lang" aria-labelledby="langLabel">
+				<option value="en">EN</option>
+				<option value="es">ES</option>
+				<option value="ua">UA</option>
+				<option value="ru">RU</option>
+			</select>
+		</form>
+	</div>
+</header>

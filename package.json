@@ -17,6 +17,7 @@
 	"devDependencies": {
 		"browser-sync": "^3.0.2",
 		"del": "^8.0.0",
+		"dotenv": "^17.0.0",
 		"fs": "^0.0.1-security",
 		"gulp": "^5.0.0",
 		"gulp-autoprefixer": "^8.0.0",
@@ -30,6 +31,7 @@
 		"gulp-notify": "^5.0.0",
 		"gulp-plumber": "^1.2.1",
 		"gulp-prettier": "^6.0.0",
+		"gulp-replace": "^1.1.4",
 		"gulp-terser": "^2.1.0",
 		"gulp-ttf2woff2": "^5.0.0",
 		"imagemin-mozjpeg": "^10.0.0",
