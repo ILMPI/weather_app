@@ -174,18 +174,28 @@ window.addEventListener('DOMContentLoaded', () => {
 	fetchAndRender(currentCity, currentLang);
 });
 
-searchBtn.addEventListener('click', () => {
-	if (cityInput.value.trim()) {
-		currentCity = cityInput.value.trim();
+// searchBtn.addEventListener('click', () => {
+// 	if (cityInput.value.trim()) {
+// 		currentCity = cityInput.value.trim();
+// 		fetchAndRender(currentCity, currentLang);
+// 	}
+// });
+
+const weatherForm = document.getElementById('weatherForm');
+weatherForm.addEventListener('submit', e => {
+	e.preventDefault();
+	const newCity = cityInput.value.trim();
+	if (newCity) {
+		currentCity = newCity;
 		fetchAndRender(currentCity, currentLang);
 	}
 });
 
-cityInput.addEventListener('keyup', e => {
-	if (e.key === 'Enter') {
-		searchBtn.click();
-	}
-});
+// cityInput.addEventListener('keyup', e => {
+// 	if (e.key === 'Enter') {
+// 		searchBtn.click();
+// 	}
+// });
 
 function getDefaultLang() {
 	const browserLang = navigator.language.slice(0, 2).toLowerCase();
